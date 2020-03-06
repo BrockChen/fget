@@ -146,6 +146,8 @@ func (d *Downloader) Start() blockSlice {
 	counts := length / int(lenSub)
 	results := blockSlice{}
 	var downSize int64 = 0
+	var downBlockCounts int64 = 0
+
 	ctx, cancle := context.WithCancel(context.Background())
 	defer cancle()
 	statistics := make(chan block, 1)
@@ -159,7 +161,7 @@ func (d *Downloader) Start() blockSlice {
 				return
 			case s := <-statistics:
 				results = append(results, s)
-				//downSize += s.targetSize
+				downBlockCounts += s.targetSize
 			case ds := <-d.downStatistic:
 				c += ds
 				downSize += int64(ds)
@@ -173,7 +175,7 @@ func (d *Downloader) Start() blockSlice {
 
 			case <-time.After(2 * time.Second):
 				fmt.Println(downSize, length)
-				if downSize == int64(length) {
+				if downSize == int64(length) || downBlockCounts == int64(length) {
 					cancle()
 					return
 				}
@@ -199,7 +201,6 @@ func (d *Downloader) Start() blockSlice {
 						cancle()
 						return
 					} else {
-						//fmt.Printf("block: %d, size: %d\n", b.index, b.targetSize)
 						statistics <- b
 					}
 				}
