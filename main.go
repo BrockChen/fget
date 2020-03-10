@@ -282,7 +282,7 @@ func (d *Downloader) downBlock(b block) error {
 	}
 	defer resp.Body.Close()
 
-	fIn, err := os.OpenFile(fname, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0x0777)
+	fIn, err := os.OpenFile(fname, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		return err
 	}
@@ -305,7 +305,7 @@ func (d *Downloader) downBlock(b block) error {
 }
 
 func (d *Downloader) Merge(blocks blockSlice) error {
-	fIn, err := os.OpenFile(d.fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0x0777)
+	fIn, err := os.OpenFile(d.fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		return err
 	}
